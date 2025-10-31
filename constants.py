@@ -15,7 +15,7 @@ PLAYER_SPEED = 200              # default 200
 PLAYER_SLOW_SPEED_FACTOR = 0.3   # default 0.2
 PLAYER_SLOW_TURN_FACTOR = 0.3   
 PLAYER_SHOOT_SPEED = 500        # default 500
-PLAYER_SHOOT_COOLDOWN = 0     # default 0.3
+PLAYER_SHOOT_COOLDOWN = 0.3     # default 0.3
 
 SHOT_RADIUS = 5                 # default 5
 
@@ -27,3 +27,6 @@ FONT_POWERUP_OUTLINE = pygame.font.Font(None,(POWERUP_RADIUS*3) + 4)
 
 POWERUP_SHIELD_COOLDOWN = 1     # seconds
 POWERUP_INVINCIBILITY_TIME = 10 # seconds
+
+POWERUP_FAST_FIRE_RATE = PLAYER_SHOOT_COOLDOWN * 0.3
+POWERUP_FAST_FIRE_TIME = 10     # seconds

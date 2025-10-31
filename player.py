@@ -12,7 +12,7 @@ class Player(CircleShape):
         self.low_thrusting = False
 
         self.lives = 1; self.shielded = False
-        self.fast_fire = False
+        self.fast_fire = False; self.time_fast_fire = 0
         self.piercing_shot = False
         self.backward_shot = False
         self.triple_shot = False
@@ -78,7 +78,8 @@ class Player(CircleShape):
         if self.shot_timer <= 0:
             bullet = Shot(self.position.x, self.position.y, SHOT_RADIUS)
             bullet.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
-            self.shot_timer = PLAYER_SHOOT_COOLDOWN
+            if not self.fast_fire: self.shot_timer = PLAYER_SHOOT_COOLDOWN
+            if self.fast_fire: self.shot_timer = POWERUP_FAST_FIRE_RATE
     
     def apply_powerup(self, pow):
         if pow.type == "shield":
@@ -87,6 +88,8 @@ class Player(CircleShape):
         if pow.type == "invincibility":
             self.invincible = True
             self.time_invincible = 0
+        if pow.type == "fast_fire":
+            self.fast_fire = True
 
 
     def update(self, dt):
@@ -123,3 +126,8 @@ class Player(CircleShape):
         if self.time_invincible >= POWERUP_INVINCIBILITY_TIME:
             self.invincible = False
             self.time_invincible = 0
+        if self.fast_fire:
+            self.time_fast_fire += dt
+        if self.time_fast_fire >= POWERUP_FAST_FIRE_TIME:
+            self.fast_fire = False
+            self.time_fast_fire = 0

@@ -1,7 +1,9 @@
 import pygame
 import random
 from circleshape import CircleShape
+from powerup import PowerUp
 from constants import *
+
 
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
@@ -17,7 +19,9 @@ class Asteroid(CircleShape):
     def split(self):
         self.kill()
         if self.radius == ASTEROID_MIN_RADIUS:
-            return
+            spawn_powerup = random.choice(range(100))
+            if spawn_powerup <= POWERUP_CHANCE:
+                PowerUp(self.position.x, self.position.y)
         else:
             new_radius = self.radius - ASTEROID_MIN_RADIUS
             angle = random.uniform(20, 50)

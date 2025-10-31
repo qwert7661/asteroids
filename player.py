@@ -46,7 +46,7 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, 'green', self.triangle())
+        pygame.draw.polygon(screen, 'white', self.triangle())
         if self.thrusting or self.low_thrusting:
             self.draw_flame(screen)
 

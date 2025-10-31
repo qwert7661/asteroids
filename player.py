@@ -13,9 +13,9 @@ class Player(CircleShape):
 
         self.lives = 1; self.shielded = False
         self.fast_fire = False; self.time_fast_fire = 0
-        self.piercing_shot = False
-        self.backward_shot = False
-        self.triple_shot = False
+        self.piercing_shot = False; self.time_piercing_shot = 0
+        self.backward_shot = False; self.time_backward_shot = 0
+        self.triple_shot = False; self.time_triple_shot = 0
         self.invincible = False; self.time_invincible = 0
 
     def triangle(self):
@@ -78,8 +78,22 @@ class Player(CircleShape):
         if self.shot_timer <= 0:
             bullet = Shot(self.position.x, self.position.y, SHOT_RADIUS)
             bullet.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+            if self.triple_shot:
+                bullet_left = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+                bullet_left.velocity = pygame.Vector2(0,1).rotate(self.rotation - POWERUP_TRIPLE_SHOT_ANGLE) * PLAYER_SHOOT_SPEED
+                bullet_right = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+                bullet_right.velocity = pygame.Vector2(0,1).rotate(self.rotation + POWERUP_TRIPLE_SHOT_ANGLE) * PLAYER_SHOOT_SPEED
+            if self.backward_shot:
+                bullet_back = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+                bullet_back.velocity = pygame.Vector2(0,1).rotate(self.rotation) * -PLAYER_SHOOT_SPEED
+                if self.triple_shot:
+                    bullet_back_left = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+                    bullet_back_left.velocity = pygame.Vector2(0,1).rotate(self.rotation - POWERUP_TRIPLE_SHOT_ANGLE) * -PLAYER_SHOOT_SPEED
+                    bullet_back_right = Shot(self.position.x, self.position.y, SHOT_RADIUS)
+                    bullet_back_right.velocity = pygame.Vector2(0,1).rotate(self.rotation + POWERUP_TRIPLE_SHOT_ANGLE) * -PLAYER_SHOOT_SPEED
             if not self.fast_fire: self.shot_timer = PLAYER_SHOOT_COOLDOWN
             if self.fast_fire: self.shot_timer = POWERUP_FAST_FIRE_RATE
+
     
     def apply_powerup(self, pow):
         if pow.type == "shield":
@@ -90,6 +104,16 @@ class Player(CircleShape):
             self.time_invincible = 0
         if pow.type == "fast_fire":
             self.fast_fire = True
+            self.time_fast_fire = 0
+        if pow.type == "backward_shot":
+            self.backward_shot = True
+            self.time_backward_shot = 0
+        if pow.type == "triple_shot":
+            self.triple_shot = True
+            self.time_triple_shot = 0
+        if pow.type == "piercing_shot":
+            self.piercing_shot = True
+            self.time_piercing_shot = 0
 
 
     def update(self, dt):
@@ -131,3 +155,18 @@ class Player(CircleShape):
         if self.time_fast_fire >= POWERUP_FAST_FIRE_TIME:
             self.fast_fire = False
             self.time_fast_fire = 0
+        if self.backward_shot:
+            self.time_backward_shot += dt
+        if self.time_backward_shot >= POWERUP_BACKWARD_SHOT_TIME:
+            self.backward_shot = False
+            self.time_backward_shot = 0
+        if self.triple_shot:
+            self.time_triple_shot += dt
+        if self.time_triple_shot >= POWERUP_TRIPLE_SHOT_TIME:
+            self.triple_shot = False
+            self.time_triple_shot = 0
+        if self.piercing_shot:
+            self.time_piercing_shot += dt
+        if self.time_piercing_shot >= POWERUP_PIERCING_SHOT_TIME:
+            self.piercing_shot = False
+            self.time_piercing_shot = 0

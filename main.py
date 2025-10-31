@@ -66,12 +66,15 @@ def main():
             for shot in shots:
                 if ast.check_collision(shot):
                     ast.split()
-                    shot.kill()
+                    if not player.piercing_shot:
+                        shot.kill()
                     score += 1
         for pow in powerups:
             if pow.check_collision(player):
-                print("you should pick it up")
                 player.apply_powerup(pow)
+                if pow.type == "nuke":
+                    for ast in asteroids:
+                        ast.split()
                 pow.kill()
 
         # Render

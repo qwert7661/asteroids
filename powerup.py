@@ -18,8 +18,9 @@ class PowerUp(CircleShape):
                   "piercing_shot",
                   "backward_shot",
                   "triple_shot",
-                  "invincibility"]
-        weight = [30, 20, 20, 15, 10, 5]
+                  "invincibility",
+                  "nuke"]
+        weight = [30, 20, 20, 15, 10, 4, 1]
         self.type = rng.choices(types, weights=weight, k=1)[0]
         return self.type
 
@@ -30,6 +31,7 @@ class PowerUp(CircleShape):
         if self.type == "backward_shot": self.letter = "B"
         if self.type == "triple_shot": self.letter = "T"
         if self.type == "invincibility": self.letter = "I"
+        if self.type == "nuke": self.letter = "N"
         return self.letter
     def render_letter(self):
         self.letter_render = FONT_POWERUP.render(self.letter,True,'green')

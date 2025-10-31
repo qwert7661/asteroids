@@ -11,6 +11,13 @@ class Player(CircleShape):
         self.thrusting = False
         self.low_thrusting = False
 
+        self.lives = 1
+        self.fast_fire = False
+        self.piercing_shot = False
+        self.backward_shot = False
+        self.triple_shot = False
+        self.invincible = False
+
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -66,6 +73,11 @@ class Player(CircleShape):
             bullet = Shot(self.position.x, self.position.y, SHOT_RADIUS)
             bullet.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
             self.shot_timer = PLAYER_SHOOT_COOLDOWN
+    
+    def apply_powerup(self, pow):
+        print("You picked up a ",pow.type,"powerup")
+        if pow.type == "shield":
+            self.lives += 1
 
 
     def update(self, dt):

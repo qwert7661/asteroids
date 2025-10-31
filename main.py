@@ -34,31 +34,45 @@ def main():
     dt = 0
     score = 0
     time_in_seconds = 0
-
-    powerup = PowerUp(0,0)
-    print(powerup.type)
+    shield_cooldown = 0
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
-        # Update
+        
+        # Timetracking
         time_in_seconds += dt
+        shield_cooldown -= dt
+        if shield_cooldown > 0: print(shield_cooldown)
+        # Update
         for item in updatable:
             item.update(dt)
         for ast in asteroids:
             if ast.check_collision(player):
-                print("Game over!")
-                print("Score:", score)
-                print("Time:",int(time_in_seconds))
-                return
+                if player.invincible == False and shield_cooldown <= 0:
+                    print(player.lives)
+                    player.lives -= 1
+                    shield_cooldown = 1
+                    if player.lives == 0:
+                        print("Game over!")
+                        print("Score:", score)
+                        print("Time:",int(time_in_seconds))
+                        return
+                    else:
+                        ast.split()
         for ast in asteroids:
             for shot in shots:
                 if ast.check_collision(shot):
                     ast.split()
                     shot.kill()
                     score += 1
+        for pow in powerups:
+            if pow.check_collision(player):
+                print("you should pick it up")
+                player.apply_powerup(pow)
+                pow.kill()
 
         # Render
         screen.fill((0,0,0))

@@ -42,6 +42,12 @@ def main():
             if ast.check_collision(player):
                 print("Game over!")
                 return
+        for ast in asteroids:
+            for shot in shots:
+                if ast.check_collision(shot):
+                    ast.kill()
+                    shot.kill()
+
         
 
         # Render

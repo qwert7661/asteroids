@@ -24,3 +24,6 @@ POWERUP_CHANCE = 100            # % of 100
 POWERUP_LIFESPAN = 10           # seconds
 FONT_POWERUP = pygame.font.Font(None, POWERUP_RADIUS*3)
 FONT_POWERUP_OUTLINE = pygame.font.Font(None,(POWERUP_RADIUS*3) + 4)
+
+POWERUP_SHIELD_COOLDOWN = 1     # seconds
+POWERUP_INVINCIBILITY_TIME = 10 # seconds

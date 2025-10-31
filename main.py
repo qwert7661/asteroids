@@ -45,16 +45,16 @@ def main():
         # Timetracking
         time_in_seconds += dt
         shield_cooldown -= dt
-        if shield_cooldown > 0: print(shield_cooldown)
         # Update
         for item in updatable:
             item.update(dt)
         for ast in asteroids:
             if ast.check_collision(player):
                 if player.invincible == False and shield_cooldown <= 0:
-                    print(player.lives)
                     player.lives -= 1
-                    shield_cooldown = 1
+                    shield_cooldown = POWERUP_SHIELD_COOLDOWN
+                    if player.lives == 1:
+                        player.shielded = False
                     if player.lives == 0:
                         print("Game over!")
                         print("Score:", score)

@@ -11,12 +11,12 @@ class Player(CircleShape):
         self.thrusting = False
         self.low_thrusting = False
 
-        self.lives = 1
+        self.lives = 1; self.shielded = False
         self.fast_fire = False
         self.piercing_shot = False
         self.backward_shot = False
         self.triple_shot = False
-        self.invincible = False
+        self.invincible = False; self.time_invincible = 0
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -53,7 +53,13 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, 'white', self.triangle())
+        if not self.invincible and not self.shielded:
+            pygame.draw.polygon(screen, 'grey', self.triangle())
+        if self.shielded:
+            pygame.draw.polygon(screen, (100,255,255), self.triangle())
+        if self.invincible:
+            pygame.draw.polygon(screen, 'green', self.triangle())
+
         if self.thrusting or self.low_thrusting:
             self.draw_flame(screen)
 
@@ -75,23 +81,25 @@ class Player(CircleShape):
             self.shot_timer = PLAYER_SHOOT_COOLDOWN
     
     def apply_powerup(self, pow):
-        print("You picked up a ",pow.type,"powerup")
         if pow.type == "shield":
             self.lives += 1
+            self.shielded = True
+        if pow.type == "invincibility":
+            self.invincible = True
+            self.time_invincible = 0
 
 
     def update(self, dt):
+        # Player Input
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:    # Turn left
             self.rotate(-dt)
         elif keys[pygame.K_LEFT]:
             self.rotate(-dt * PLAYER_SLOW_TURN_FACTOR)
-        
         if keys[pygame.K_d]:    # Turn right
             self.rotate(dt)
         elif keys[pygame.K_RIGHT]:
             self.rotate(dt * PLAYER_SLOW_TURN_FACTOR)
-        
         if keys[pygame.K_w]:    # Move forward
             self.move(dt)
             self.thrusting = True
@@ -103,10 +111,15 @@ class Player(CircleShape):
         else: 
             self.thrusting = False
             self.low_thrusting = False
-        
         if keys[pygame.K_s]:    # Move backward, slow speed only
             self.move(-dt * PLAYER_SLOW_SPEED_FACTOR)
-        
         if keys[pygame.K_SPACE]:# Shoot
             self.shoot()
         self.shot_timer -= dt   # Decrease shot cooldown
+
+        # Tracking powerups
+        if self.invincible:
+            self.time_invincible += dt
+        if self.time_invincible >= POWERUP_INVINCIBILITY_TIME:
+            self.invincible = False
+            self.time_invincible = 0

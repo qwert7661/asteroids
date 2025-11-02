@@ -2,7 +2,6 @@ import pygame
 import random
 from asteroid import Asteroid
 from constants import *
-from settings import *
 
 
 class AsteroidField(pygame.sprite.Sprite):
@@ -43,8 +42,11 @@ class AsteroidField(pygame.sprite.Sprite):
         asteroid.velocity = velocity
 
     def update(self, dt):
+        global fps
+        if dt != 0:
+            fps = int(1/dt)
         self.spawn_timer += dt
-        if self.spawn_timer > self.ASTEROID_SPAWN_RATE:
+        if self.spawn_timer > self.ASTEROID_SPAWN_RATE and fps > FPS_MINIMUM:
             self.spawn_timer = 0
 
             # spawn a new asteroid at a random edge
@@ -62,12 +64,16 @@ class AsteroidField(pygame.sprite.Sprite):
         # Scale difficulty over time
         if self.ASTEROID_SPAWN_RATE > 0:
             self.ASTEROID_SPAWN_RATE += (ASTEROID_SPAWN_RATE_FACTOR * dt)
-        if int_time % ASTEROID_KINDS_TIME == 0: 
-            if self.time_track_cooldown == 0:
-                self.time_track_cooldown = 1
-                self.ASTEROID_KINDS += 1
-                print(self.ASTEROID_KINDS)
-        if int_time % ASTEROID_KINDS_TIME == 1:
-            self.time_track_cooldown = 0
-        # ASTEROID_KINDS += 1
+        if self.ASTEROID_KINDS < ASTEROID_KINDS_MAX:
+            if int_time % ASTEROID_KINDS_TIME == 0: 
+                if self.time_track_cooldown == 0:
+                    self.time_track_cooldown = 1
+                    self.ASTEROID_KINDS += 1
+            if int_time % ASTEROID_KINDS_TIME == 1:
+                self.time_track_cooldown = 0
+        
+        # testing
+        # group = self.containers[0]
+        # len(group)
+        # print(len(group))
         

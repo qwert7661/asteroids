@@ -10,7 +10,6 @@ class PowerUp(CircleShape):
         self.type = self.determine_type()
         self.letter = self.assign_letter()
         self.letter_render = self.render_letter()
-        self.letter_outline = self.render_letter_outline()
 
     def determine_type(self):
         types  = ["shield",
@@ -25,25 +24,42 @@ class PowerUp(CircleShape):
         return self.type
 
     def assign_letter(self):
-        if self.type == "shield": self.letter = "S"
-        if self.type == "fast_fire": self.letter = "F"
-        if self.type == "piercing_shot": self.letter = "P"
-        if self.type == "backward_shot": self.letter = "B"
-        if self.type == "triple_shot": self.letter = "T"
-        if self.type == "invincibility": self.letter = "I"
-        if self.type == "nuke": self.letter = "N"
+        if self.type == "shield": 
+            self.letter = "S"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("S")
+        if self.type == "fast_fire": 
+            self.letter = "F"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("F")
+        if self.type == "piercing_shot":
+            self.letter = "P"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("P")
+        if self.type == "backward_shot":
+            self.letter = "B"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("B")
+        if self.type == "triple_shot":
+            self.letter = "T"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("T")
+        if self.type == "invincibility":
+            self.letter = "I"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("I")
+        if self.type == "nuke":
+            self.letter = "N"
+            self.letter_width, self.letter_height = FONT_POWERUP.size("N")
         return self.letter
+    
     def render_letter(self):
-        self.letter_render = FONT_POWERUP.render(self.letter,True,'green')
+        if self.type == "shield": self.letter_render = FONT_POWERUP.render(self.letter,True,'cyan')
+        if self.type == "fast_fire": self.letter_render = FONT_POWERUP.render(self.letter,True,'yellow')
+        if self.type == "piercing_shot": self.letter_render = FONT_POWERUP.render(self.letter,True,'yellow')
+        if self.type == "backward_shot": self.letter_render = FONT_POWERUP.render(self.letter,True,'yellow')
+        if self.type == "triple_shot": self.letter_render = FONT_POWERUP.render(self.letter,True,'yellow')
+        if self.type == "invincibility": self.letter_render = FONT_POWERUP.render(self.letter,True,'green')
+        if self.type == "nuke": self.letter_render = FONT_POWERUP.render(self.letter,True,'red')
         return self.letter_render
-    def render_letter_outline(self):
-        self.letter_outline = FONT_POWERUP_OUTLINE.render(self.letter,True,'black')
-        return self.letter_outline
 
     def draw(self, screen):
-        screen.blit(self.letter_outline,(self.position.x - POWERUP_RADIUS + 2, self.position.y - POWERUP_RADIUS + 1))
-        screen.blit(self.letter_render,(self.position.x - POWERUP_RADIUS + 3, self.position.y - POWERUP_RADIUS + 3))
-        # pygame.draw.circle(screen, 'red', (self.position.x, self.position.y), self.radius, 1)
+        screen.blit(self.letter_render,(self.position.x - (self.letter_width//2), self.position.y - (self.letter_height//2) + 1))
+        pygame.draw.circle(screen, 'red', (self.position.x, self.position.y), self.radius, 1) # Draws hitbox
 
     def update(self, dt):
         self.lifespan -= dt

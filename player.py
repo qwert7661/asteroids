@@ -17,6 +17,7 @@ class Player(CircleShape):
         self.backward_shot = False; self.time_backward_shot = 0
         self.triple_shot = False; self.time_triple_shot = 0
         self.invincible = False; self.time_invincible = 0
+        self.just_nuked = False; self.time_just_nuked = 0
 
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -56,12 +57,13 @@ class Player(CircleShape):
         if not self.invincible and not self.shielded:
             pygame.draw.polygon(screen, 'grey', self.triangle())
         if self.shielded:
-            pygame.draw.polygon(screen, (100,255,255), self.triangle())
+            pygame.draw.polygon(screen, 'cyan', self.triangle())
         if self.invincible:
             pygame.draw.polygon(screen, 'green', self.triangle())
 
         if self.thrusting or self.low_thrusting:
             self.draw_flame(screen)
+        # pygame.draw.circle(screen, 'red', (self.position.x, self.position.y), self.radius, 1) # Draws hitbox
 
     def draw_flame(self, screen):
         pygame.draw.polygon(screen, 'red', self.triangle_flame_outer())
@@ -97,8 +99,9 @@ class Player(CircleShape):
     
     def apply_powerup(self, pow):
         if pow.type == "shield":
-            self.lives += 1
-            self.shielded = True
+            if not self.shielded:
+                self.lives += 1
+                self.shielded = True
         if pow.type == "invincibility":
             self.invincible = True
             self.time_invincible = 0
@@ -114,6 +117,9 @@ class Player(CircleShape):
         if pow.type == "piercing_shot":
             self.piercing_shot = True
             self.time_piercing_shot = 0
+        if pow.type == "nuke":
+            self.just_nuked = True
+            self.time_just_nuked = 0
 
 
     def update(self, dt):
@@ -180,3 +186,8 @@ class Player(CircleShape):
         if self.time_piercing_shot >= POWERUP_PIERCING_SHOT_TIME:
             self.piercing_shot = False
             self.time_piercing_shot = 0
+        if self.just_nuked:
+            self.time_just_nuked += dt
+        if self.time_just_nuked >= 3:
+            self.just_nuked = False
+            self.time_just_nuked = 0

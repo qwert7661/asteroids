@@ -144,6 +144,16 @@ class Player(CircleShape):
             self.shoot()
         self.shot_timer -= dt   # Decrease shot cooldown
 
+        # Pacmanning
+        if self.position.x < 0 - PLAYER_RADIUS:
+             self.position.x += SCREEN_WIDTH + PLAYER_RADIUS
+        if self.position.x > SCREEN_WIDTH + PLAYER_RADIUS:
+              self.position.x -= SCREEN_WIDTH - PLAYER_RADIUS
+        if self.position.y < 0 - PLAYER_RADIUS:
+             self.position.y += SCREEN_HEIGHT + PLAYER_RADIUS
+        if self.position.y > SCREEN_HEIGHT + PLAYER_RADIUS:
+              self.position.y -= SCREEN_HEIGHT - PLAYER_RADIUS
+
         # Tracking powerups
         if self.invincible:
             self.time_invincible += dt
